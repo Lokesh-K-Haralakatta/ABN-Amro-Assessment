@@ -6,17 +6,17 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.loki.recipes.dao.Recipe;
+import com.loki.recipes.dao.RecipeEntity;
 
 @Repository
-public interface RecipesRepository extends JpaRepository<Recipe,Integer> {
+public interface RecipesRepository extends JpaRepository<RecipeEntity,Integer> {
 	//Method to retrieve all recipes from repository matching with given DateTime value
-	List<Recipe> findRecipesByCreationDateTime(Date dateTime);
+	List<RecipeEntity> findRecipesByCreationDateTime(Date dateTime);
 	
 	//Method to retrieve all recipes from repository matching with given recipe type
-	List<Recipe> findRecipesByType(String type);
+	List<RecipeEntity> findRecipesByType(String type);
 	
 	//Method to retrieve all recipes from repository matching with given serving capacity
-	List<Recipe> findRecipesByServingCapacity(Integer capacity);
+	List<RecipeEntity> findRecipesByServingCapacity(Integer capacity);
 	
 }

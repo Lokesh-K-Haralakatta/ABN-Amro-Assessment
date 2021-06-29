@@ -1,28 +1,24 @@
-package com.loki.recipes.util;
+package com.loki.recipes.test.util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.loki.recipes.dao.Ingredient;
-import com.loki.recipes.dao.Recipe;
+import com.loki.recipes.dao.RecipeEntity;
+import com.loki.recipes.pojos.Ingredient;
+import com.loki.recipes.util.Util;
+
+import lombok.extern.slf4j.Slf4j;
 
 //Class to contain common test utility methods
+@Slf4j
 public class TestUtil {
-	private static final Logger log = LogManager.getLogger(TestUtil.class.getName());
-	
-	//Get and return current date along with time in required format
-	public static Date getCurrentDateTime() {
-		String pattern = "dd-MM-yyyy HH:mm";
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		return simpleDateFormat.getCalendar().getTime();
-	}
 	
 	//Build and return list of ingredients
 	public static List<Ingredient> buildIngredients(){
@@ -44,7 +40,7 @@ public class TestUtil {
 				jsonString = mapper.writeValueAsString(ingList); 
 		} catch(Exception e) {
 			log.error("Exception caught while converting List to JSON String");
-			e.printStackTrace();
+			log.error(ExceptionUtils.getStackTrace(e));
 		}
 		return jsonString;
 	}
@@ -60,7 +56,7 @@ public class TestUtil {
 	    	ingredientsList = Arrays.asList(mapper.readValue(jsonString, Ingredient[].class));
 	    } catch(Exception e) {
 	    	log.error("Exception caught while converting JSON String to Ingredients List");
-	    	e.printStackTrace();
+	    	log.error(ExceptionUtils.getStackTrace(e));
 	    }
 	    return ingredientsList;
 	}
@@ -73,14 +69,15 @@ public class TestUtil {
 	}
 	
 	//Build sample recipe instance using utility methods and return
-	public static Recipe buildSampleRecipe(Integer id,String name,String type,Integer capacity) {
-		Recipe newRecipe = new Recipe();
+	public static RecipeEntity buildSampleRecipe(Integer id,String name,String type,Integer capacity) {
+		RecipeEntity newRecipe = new RecipeEntity();
 		newRecipe.setId(id);
 		newRecipe.setName(name);
 		newRecipe.setType(type);
 		newRecipe.setServingCapacity(capacity);
 		newRecipe.setIngredients(TestUtil.convertToJSONString(TestUtil.buildIngredients()));
-		newRecipe.setCreationDateTime(TestUtil.getCurrentDateTime());
+		Optional<Date> currentDateTime = Util.getCurrentDateTime();
+		newRecipe.setCreationDateTime(currentDateTime.isPresent()?currentDateTime.get():null);
 		newRecipe.setInstructions(TestUtil.buildInstructions());
 		return newRecipe;
 	}

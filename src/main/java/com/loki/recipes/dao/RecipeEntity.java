@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "Recipes")
-public class Recipe {
+public class RecipeEntity {
 	@Id
 	private Integer id;
 	
