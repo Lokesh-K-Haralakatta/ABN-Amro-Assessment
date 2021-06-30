@@ -59,6 +59,14 @@ public class RecipesExceptionHandler extends ResponseEntityExceptionHandler{
 		return buildErrorResponse(ex,ex.getMessage(),ex.getStatus());
 	}
 	
+	//Exception method to handle unauthroized exception
+	@ExceptionHandler(UnAuthorizedException.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	public ResponseEntity<Object> handleUnauthorizedException(UnAuthorizedException ex){
+		log.info("Handling Unauthorized Exception");
+		return buildErrorResponse(ex,ex.getMessage(),ex.getStatus());
+	}
+	
 	//Exception method to handle Resource creation failure exception
 	@ExceptionHandler(RecipeNotCreatedException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -66,6 +74,15 @@ public class RecipesExceptionHandler extends ResponseEntityExceptionHandler{
 		log.info("Handling resource creation failure exception");
 		return buildErrorResponse(ex,ex.getMessage(),ex.getStatus());
 	}
+	
+	//Exception method to handle Recourse conflict exception
+	@ExceptionHandler(ResourceConflictException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public ResponseEntity<Object> handleResourceConflictException(ResourceConflictException ex){
+		log.info("Hanlding resource conflict exception");
+		return buildErrorResponse(ex,ex.getMessage(),ex.getStatus());
+	}
+	
 	//Exception method to handle all uncaught exceptions
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

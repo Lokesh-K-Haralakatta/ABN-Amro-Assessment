@@ -1,6 +1,7 @@
 package com.loki.recipes.pojos;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import lombok.Getter;
@@ -16,5 +17,6 @@ public class Recipe {
 	private String type;
 	private Integer servingCapacity;
 	private List<Ingredient> ingredientsList = new ArrayList<>();
+	private Date creationDateTime;
 	private String instructions;
 }

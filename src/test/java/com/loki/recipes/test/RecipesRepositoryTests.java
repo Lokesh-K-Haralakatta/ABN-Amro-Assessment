@@ -13,6 +13,7 @@ import com.loki.recipes.dao.RecipeEntity;
 import com.loki.recipes.pojos.Ingredient;
 import com.loki.recipes.repository.RecipesRepository;
 import com.loki.recipes.test.util.TestUtil;
+import com.loki.recipes.util.Util;
 
 @DataJpaTest
 public class RecipesRepositoryTests {
@@ -23,7 +24,7 @@ public class RecipesRepositoryTests {
 	@Test
 	public void SaveAndFindRecipeByIdTest() {
 		//Get new sample recipe
-		RecipeEntity newRecipe = TestUtil.buildSampleRecipe(101,"Pulav","vg",10);
+		RecipeEntity newRecipe = TestUtil.buildSampleRecipeEntity(101,"Pulav","vg",10);
 		//Save new recipe to repository
 		repo.save(newRecipe);
 		
@@ -40,7 +41,7 @@ public class RecipesRepositoryTests {
 		assertThat(retRecipe).as("Retrieved recipe is not equal to saved recipe").isEqualTo(newRecipe);
 		
 		//Validate Ingredients present in retrieved recipe
-		List<Ingredient> ingredientsList = TestUtil.convertJSONStringToIngredientsList(retRecipe.getIngredients());
+		List<Ingredient> ingredientsList = Util.convertJSONStringToIngredientsList(retRecipe.getIngredients());
 		assertThat(ingredientsList).as("Number of ingredients are not matching with expected of 4")
 									.isNotEmpty().hasSize(4);
 	}
@@ -48,7 +49,7 @@ public class RecipesRepositoryTests {
 	@Test
 	public void SaveAndFindRecipesByCreationDateTimeTest() {
 		//Get new sample recipe
-		RecipeEntity newRecipe = TestUtil.buildSampleRecipe(102,"Puliyogare","vg",6);
+		RecipeEntity newRecipe = TestUtil.buildSampleRecipeEntity(102,"Puliyogare","vg",6);
 		//Save new recipe to repository
 		repo.save(newRecipe);
 		
@@ -68,8 +69,8 @@ public class RecipesRepositoryTests {
 	@Test
 	public void SaveAndFindRecipesByTypeTest() {
 		//Get and Save two recipes into repository with different type
-		RecipeEntity newRecipe1 = TestUtil.buildSampleRecipe(103,"Mutton Biriyani","ng",20);
-		RecipeEntity newRecipe2 = TestUtil.buildSampleRecipe(104,"Veg Biriyani","vg",10);
+		RecipeEntity newRecipe1 = TestUtil.buildSampleRecipeEntity(103,"Mutton Biriyani","ng",20);
+		RecipeEntity newRecipe2 = TestUtil.buildSampleRecipeEntity(104,"Veg Biriyani","vg",10);
 		repo.save(newRecipe1);
 		repo.save(newRecipe2);
 		
@@ -93,7 +94,7 @@ public class RecipesRepositoryTests {
 	@Test
 	public void SaveAndFindRecipesByServingCapacityTest() {
 		//Get new sample recipe
-		RecipeEntity newRecipe = TestUtil.buildSampleRecipe(105,"White Rice","vg",30);
+		RecipeEntity newRecipe = TestUtil.buildSampleRecipeEntity(105,"White Rice","vg",30);
 		//Save new recipe to repository
 		repo.save(newRecipe);
 		
