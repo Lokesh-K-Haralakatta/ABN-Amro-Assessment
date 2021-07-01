@@ -22,6 +22,9 @@ Recipe Web Service is microservice based layered architectured RESTful Web Servi
   - Just one physical table - `recipes` is used to store the recipes data for the service
   - [MySQL]((https://www.mysql.com/) is configured to be used as database service
   - For development and testing purposes, the Embedded H2 Database provided by Spring Boot framework is also utilized 
+
+### Webservice API Flow
+[embed]https://github.com/Lokesh-K-Haralakatta/ABN-Amro-Assessment/blob/develop/recipw-web-service-flow.pdf[/embed]
 ### Prerequisites
 * [JDK 1.8](https://www.oracle.com/in/java/technologies/javase/javase-jdk8-downloads.html)
 * [Apache Maven](https://maven.apache.org/)
