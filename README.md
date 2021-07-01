@@ -92,10 +92,71 @@ API End Point | Method | Purpose | Request | Response
 /api/recipe/{id} | DELETE | Delete an existing recipe | Recipe id as path parameter and valid JWT Token as bearer token as auth header | Deletion message with 200 OK on success, 401 Not Found on failure
 
 ### Web Service ReST End Points Usage and Sample Response
-
+In order to consume Recipe Webservice ReST API End points, one has to first authenticate and get JWT Token in order to place subsequent client requests. There are 2 object models needed to be aware of - one for Authentication and the other one for Recipe contents. Below given are details and examples on needed models:
+- **User Model**
+  - JSON Schema
+    ```
+    {
+	    "userName": "Username as configured for recipe web service",
+	    "password": "JWT Secret Key as configured for recipe web service"
+    }
+    ```
+  - JSON Example
+    ```
+    {
+	     "userName": "abnamro",
+	     "password": "recipeKey"
+    }
+    ```
+- **Recipe Model**
+  - JSON Schema
+    ```
+    {
+	      "id": "recipeId as integer value",
+	      "name": "recipeName as string",
+	      "type": "recipeType - ng/vg/eg as string",
+	      "servingCapacity": "number of people the dish to be served as integer value",
+	      "creationDateTime": "creation date time as Date or null",
+	      "ingredients": "list of ingredients objects with name and quantity as fields or null",
+	      "instructtions": "step by step procedure to prepare recipe as text or null"
+    }
+    ```
+  - JSON Example 
+    ```
+    {
+	      "id": 101,
+	      "name": "Sweet Bun",
+	      "type": "vg",
+	      "servingCapacity": 5,
+	      "creationDateTime": null,
+	      "ingredients": [{
+		                      "name": "all purpose floor",
+		                      "quantity": "500 gms"
+	                      }, {
+		                      "name": "yeast",
+		                      "quantity": "5 gms"
+	                      }, {
+		                      "name": "sugar",
+		                      "quantity": "10 gms"
+	                      }, {
+		                      "name": "milk",
+		                      "quantity": "100 ml"
+	                      }],
+	       "instructtions": "1.Activate the yeast by with milk and sugar \n 2.Take all purpose floor in mixing bowl and mix with sugar and milk \n 3.Mix yeast with floor in bowl\n 4.Wait for few minutes to raise and then put inti oven for about 20-25 minutes at 180 degree temperatur"
+      }
+    ```
+- ReST API Calls and responses
+  - POST request to `/api/authenticate` end point with above given user model :
+  - POST request to `/api/recipe` end point with above given recipe model and JWT Token as auth header returned in call to `/api/authenticate` :
+  - GET request to `/api/recipe/{id}` end point with path parameter as recipe id: `/api/recipe/101` end point :
+  - GET request to `/api/recipes` end point :
+  - PUT request to `/api/recipe` end point with updated model with name renamed to `Milk Bun` and servingCapacity to 6 :
+  - GET request to `/api/recipe/{id}` end point with path parameter as recipe id: `/api/recipe/101`, one should notice updated fields in previous request reflected :
+  - DELETE request to `/api/recipe/{id}` end point with path parameter as recipe id: `/api/recipe/101`, one should notice response message and status code as 200 OK :
+  - GET request to `/api/recipe/{id}` end point with path parameter as recipe id: `/api/recipe/101`, one should notice response message and status code as 401 Not Found :
+  
 ### Future Enhancements
-- Make Web Service ReST End Points Secure
-- Add Containerisation Feature
+- Integrate Web Service with Authorisation servers
 - Design and build simple,beautiful front end view
 - Integration between Backend API with Front End view
 - Data Normalization in Persistence layer if recipes data grows exponentially
