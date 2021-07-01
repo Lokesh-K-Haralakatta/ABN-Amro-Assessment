@@ -80,7 +80,16 @@ Unit Tests | Junit 5 with [AssertJ](https://assertj.github.io/doc/)
   - Command to execute with custom application.properties file: `java --spring.config.location=application.properties -jar target/ABN-Amro-Recipes-Service-0.0.1-SNAPSHOT.jar`
   - On successfull start, one should have web service listening for web requests at specified port in `application.properties` file interacting with configured production grade MySQL Service for persistence and retrieval of recipes details.      
 
-### Web Service ReST End Points
+### Web Service ReST API End Points
+Recipe Webservice comes with ReST API Ends points for authentication, creating a new recipe, retrieveing an existing recipe, retrieving all existing recieps as list, updating an an existing recipe and deleting an existing recipe. Below table lists and describes on the implemented ReST APIs:
+API End Point | Method | Purpose | Request | Response
+------------ | ------------- | ------------- | ------------ | ------------- 
+/api/authenticate | POST | Authenticate and get JWT Token | User Model with user name and password | JWT Token on Success, 403 Forbidden on failure
+/api/recipe | POST | Create a new recipe | Recipe Model and valid JWT Token as bearer token as auth header| Recipe Model with 201 Created on Success, 400 Bad request on failure
+/api/recipe/{id} | GET | Get an existing recipe | Recipe id as path parameter and valid JWT Token as bearer token as auth header | Recipe Model with 200 OK on Success, 401 Not Found on failure
+/api/recipes | GET | Gel all existing recipes as list | Valid JWT Token as bearer token as auth header | Recipes as list with 200 OK on success, 401 Not Found on failure
+/api/recipe | PUT | Update an existing recipe | Updated Recipe Model and valid JWT Token as bearer token as auth header | Recipe Model with 200 OK on Success, 401 Not Found on failure
+/api/recipe/{id} | DELETE | Delete an existing recipe | Recipe id as path parameter and valid JWT Token as bearer token as auth header | Deletion message with 200 OK on success, 401 Not Found on failure
 
 ### Web Service ReST End Points Usage and Sample Response
 
