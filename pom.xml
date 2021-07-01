@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.loki</groupId>
-	<artifactId>ABN-Amro-Recipes-Service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>Recipes-Service</artifactId>
+	<version>1.0</version>
 	<name>ABN-Amro-Recipes-Service</name>
 	<description>ABN AMRO Recipes APIs </description>
 	<properties>
@@ -36,6 +36,11 @@
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
     		<groupId>org.projectlombok</groupId>

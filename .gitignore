@@ -2,6 +2,7 @@
 .classpath
 .project
 .factorypath
+*.log
 .settings/
 target/
 pom.xml.tag

@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-    	log.info("Configuring HttpSecurity Parameters...");
+    	log.debug("Configuring HttpSecurity Parameters...");
     	httpSecurity.csrf().disable()
     				.cors().disable()
     				.authorizeRequests()

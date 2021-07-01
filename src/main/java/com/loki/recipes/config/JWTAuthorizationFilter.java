@@ -1,9 +1,6 @@
 package com.loki.recipes.config;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,14 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
@@ -40,12 +34,12 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 																throws ServletException, IOException 
 	{
-		log.info("Performing validations in doFilterInternal");
+		log.debug("Performing validations in doFilterInternal");
 		try {
 			if (checkJWTToken(request, response)) {
 				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userName, null,null);
 				SecurityContextHolder.getContext().setAuthentication(auth);
-				log.info("SecurityContextHolder set with proper auth");
+				log.debug("SecurityContextHolder set with proper auth");
 			} else {
 				String errMsg = "JWT Token check failed, clearing SecurityContextHolder";
 				log.error(errMsg);
@@ -67,7 +61,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 			log.error("Invalid JWT Token Provided, JWT Token check failed!!!");
 			return false;
 		}
-		log.info("Given JWT Token is valid, JWT Token check success");
+		log.debug("Given JWT Token is valid, JWT Token check success");
 		return true;
 	}
 

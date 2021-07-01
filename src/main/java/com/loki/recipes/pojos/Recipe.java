@@ -19,4 +19,5 @@ public class Recipe {
 	private List<Ingredient> ingredientsList = new ArrayList<>();
 	private Date creationDateTime;
 	private String instructions;
+	private String cDateTimeString;
 }

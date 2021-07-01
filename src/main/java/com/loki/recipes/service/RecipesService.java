@@ -36,19 +36,19 @@ public class RecipesService {
 		if(recipe.getCreationDateTime() == null) {
 			Optional<Date> currentDateTime = Util.getCurrentDateTime();
 			if(currentDateTime.isPresent())
-				log.info("Current DateTime to be set in recipe entity: "+currentDateTime.toString());
+				log.debug("Current DateTime to be set in recipe entity: "+currentDateTime.toString());
 			else
 				log.warn("Setting null to current date time field in recipe entity");
 			rEntity.setCreationDateTime(currentDateTime.get());
 		} else {
-			log.info("Retaining given creation date time value into recipe entity");
+			log.debug("Retaining given creation date time value into recipe entity");
 			rEntity.setCreationDateTime(recipe.getCreationDateTime());
 		}
 		
 		//Convert ingredients list into String and set to recipe entity
-		log.info("Number of ingredients to convert to string: "+recipe.getIngredientsList().size());
+		log.debug("Number of ingredients to convert to string: "+recipe.getIngredientsList().size());
 		String ingredients = Util.convertToJSONString(recipe.getIngredientsList());
-		log.info("Ingredients String: "+ingredients);
+		log.debug("Ingredients String: "+ingredients);
 		rEntity.setIngredients(ingredients);
 		
 		rEntity.setInstructions(recipe.getInstructions());
@@ -67,12 +67,13 @@ public class RecipesService {
 		
 		//Format creation date time to required format
 		if(recipeEntity.getCreationDateTime() != null)
-			recipe.setCreationDateTime(Util.formatDateTime(recipeEntity.getCreationDateTime()));
+			recipe.setCDateTimeString(Util.formatDateTime(recipeEntity.getCreationDateTime()));
+		recipe.setCreationDateTime(recipeEntity.getCreationDateTime());
 		
 		//Convert ingredients string into list and set to recipe object 
-		log.info("Ingredients String from DB: "+recipeEntity.getIngredients());
+		log.debug("Ingredients String from DB: "+recipeEntity.getIngredients());
 		List<Ingredient> ingredientsList = Util.convertJSONStringToIngredientsList(recipeEntity.getIngredients());
-		log.info("Ingredients List size after conversion: "+ingredientsList.size());
+		log.debug("Ingredients List size after conversion: "+ingredientsList.size());
 		recipe.setIngredientsList(ingredientsList);
 
 		recipe.setInstructions(recipeEntity.getInstructions());
@@ -98,11 +99,11 @@ public class RecipesService {
 	//Method to retrieve all recipes 
 	public List<Recipe> getAllRecipesFromRepository(){
 		List<RecipeEntity> retrievedRecipes = recipesRepo.findAll();
-		log.info("Number of retrieved recipes from DB: "+retrievedRecipes.size());
+		log.debug("Number of retrieved recipes from DB: "+retrievedRecipes.size());
 		//Map all retrieved recipes entity to recipe instances
 		List<Recipe> recipesList = new ArrayList<>(retrievedRecipes.size());
 		retrievedRecipes.forEach(recipeEntity -> recipesList.add(mapToRecipeObject(recipeEntity)));
-		log.info("Number of recipe entities mapped and stored to recipesList: "+recipesList.size());
+		log.debug("Number of recipe entities mapped and stored to recipesList: "+recipesList.size());
 		//Return mapped recipes
 		return recipesList;
 	}
@@ -114,8 +115,8 @@ public class RecipesService {
 	
 	//Method to query and delete requested recipe based on it's id from repository
 	public void deleteRecipeFromRepository(Integer id) {
-		log.info("Deleting recipe with id: "+id+" from repository, if it is present");
+		log.debug("Deleting recipe with id: "+id+" from repository, if it is present");
 		recipesRepo.deleteById(id);
-		log.info("Requested recipe should be deleted");
+		log.debug("Requested recipe should be deleted");
 	}
 }

@@ -41,14 +41,14 @@ public class Util {
 			String jwtSignature = chunks[2];
 			String jwtWithoutSignature = chunks[0] + "." + chunks[1];
 			
-			//log.info("Jwt Header: "+jwtHeader);
-			//log.info("Jwt Payload: "+jwtPayload);
+			//log.debug("Jwt Header: "+jwtHeader);
+			//log.debug("Jwt Payload: "+jwtPayload);
 			
 			//Validate authenticity of given JWT Token
 			SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), SA.getJcaName());
 			DefaultJwtSignatureValidator jwtValidator = new DefaultJwtSignatureValidator(SA, secretKeySpec);
 			if(jwtValidator.isValid(jwtWithoutSignature, jwtSignature)) {
-				log.info("Given JWT Token is valid");
+				log.debug("Given JWT Token is valid");
 				return true;
 			} else {
 				log.error("Given JWT Token is invalid");
@@ -63,7 +63,7 @@ public class Util {
 	
 	//Method to self generate JWT Token for authentication and authorization purposes
 	public static String generateJWTToken(String userName, String secretKey) {
-		log.info("Generating JWT Token with provided User Credentials");
+		log.debug("Generating JWT Token with provided User Credentials");
 		List<GrantedAuthority> grantedAuthorities = AuthorityUtils
 				.commaSeparatedStringToAuthorityList("ROLE_USER");
 
@@ -78,7 +78,7 @@ public class Util {
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + 600000))
 				.signWith(SA,secretKey.getBytes()).compact();
-		log.info("Generated Jwt Token of length: "+token.length());
+		log.debug("Generated Jwt Token of length: "+token.length());
 		return PREFIX + token;
 
 	}
@@ -87,7 +87,7 @@ public class Util {
 	public static Optional<Date> getCurrentDateTime() {
 		try {
 			Date currentDateTime = Calendar.getInstance().getTime();
-			log.info("Current Date Time Value: "+currentDateTime.toString());
+			log.debug("Current Date Time Value: "+currentDateTime.toString());
 			return Optional.of(currentDateTime);
 		}catch(Exception e) {
 			log.error("Exception caught while getting current datetime");
@@ -140,12 +140,12 @@ public class Util {
 	}
 	
 	//Format given Date contents to 
-	public static Date formatDateTime(Date date) {
+	public static String formatDateTime(Date date) {
 		try {
 			SimpleDateFormat formatter = new SimpleDateFormat(pattern);
 			String formattedDateTimeString = formatter.format(date);
-			log.info("Formatted DateTime: "+formattedDateTimeString);
-			return formatter.parse(formattedDateTimeString);
+			log.debug("Formatted DateTime: "+formattedDateTimeString);
+			return formattedDateTimeString;
 		}catch(Exception e) {
 			log.error("Exception caught while formatting and parsing date time in "+pattern);
 			ExceptionUtils.getStackTrace(e);

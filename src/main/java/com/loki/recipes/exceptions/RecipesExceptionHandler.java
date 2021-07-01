@@ -79,7 +79,7 @@ public class RecipesExceptionHandler extends ResponseEntityExceptionHandler{
 	@ExceptionHandler(ResourceConflictException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)
 	public ResponseEntity<Object> handleResourceConflictException(ResourceConflictException ex){
-		log.info("Hanlding resource conflict exception");
+		log.info("Handling resource conflict exception");
 		return buildErrorResponse(ex,ex.getMessage(),ex.getStatus());
 	}
 	
@@ -87,7 +87,7 @@ public class RecipesExceptionHandler extends ResponseEntityExceptionHandler{
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ResponseEntity<Object> handleAllUncaughtException(Exception ex){
-		log.info("Hanlding uncaught exception: "+ex.getCause());
+		log.info("Handling uncaught exception: "+ex.getCause());
 		return buildErrorResponse(ex,ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

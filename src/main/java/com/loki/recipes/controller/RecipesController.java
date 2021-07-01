@@ -57,6 +57,7 @@ public class RecipesController {
 		
 		String genJwtToken = Util.generateJWTToken(userCredentials.getUserName(),userCredentials.getPassword());
 		userCredentials.setPassword(genJwtToken);
+		log.info("JWT Token generated using provided secret key and returned through response");
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(userCredentials);
 	}
 	
@@ -75,14 +76,14 @@ public class RecipesController {
 			log.error("Provided recipe is having duplicate Id, thowing Resource Conflict Exception");
 			throw new ResourceConflictException(ErrorMessages.RESOURCE_CONFLICT_MSG);
 		}else {
-			log.info("Calling service.saveRecipeToRepository to save recipe into DB");
+			log.debug("Calling service.saveRecipeToRepository to save recipe into DB");
 			Recipe savedRecipe = service.saveRecipeToRepository(recipe);
 			if(savedRecipe == null) {
 				log.error("Service failed to save new recipe into DB");
 				throw new RecipeNotCreatedException(ErrorMessages.INTERNAL_SERVER_ERR_MSG);
 			}
 			
-			log.info("Service successfully saved new recipe into DB");
+			log.info("Service successfully saved new recipe into DB with recipeId: "+savedRecipe.getId());
 			return ResponseEntity.status(HttpStatus.CREATED).body(savedRecipe);
 		}
 	}
@@ -115,7 +116,7 @@ public class RecipesController {
 			log.error("Given JWT Token is invalid, throwing Unauthorized Exception");
 			throw new UnAuthorizedException(ErrorMessages.UNAUTHORIZED_MSG);
 		}else {
-			log.info("Calling service.getAllRecipes to retrieve all recipes from DB");
+			log.debug("Calling service.getAllRecipes to retrieve all recipes from DB");
 			List<Recipe> recipeList = service.getAllRecipesFromRepository();
 			if(recipeList.size() == 0) {
 				log.error("No recipes found in DB, throwing RecipeNotFound Exception");
@@ -142,7 +143,7 @@ public class RecipesController {
 			log.error("Provided recipe is not found in DB, throwing Recipe NotFound Exception");
 			throw new NoSuchRecipeFoundException(ErrorMessages.RECIPE_NOT_FOUND_MSG);
 		}else {
-			log.info("Calling service.modifyRecipeInRepository to update recipe");
+			log.debug("Calling service.modifyRecipeInRepository to update recipe");
 			Recipe modifiedRecipe = service.modifyExistingRecipeInRepository(recipe);
 			if(modifiedRecipe == null) {
 				log.error("Service failed to modify recipe in DB");
@@ -166,9 +167,9 @@ public class RecipesController {
 			log.error("Provided recipe is not found in DB, throwing Recipe NotFound Exception");
 			throw new NoSuchRecipeFoundException(ErrorMessages.RECIPE_NOT_FOUND_MSG);
 		}else {
-			log.info("Calling service.deleteRecipeFromRepository to remove recipe");
+			log.debug("Calling service.deleteRecipeFromRepository to remove recipe");
 			service.deleteRecipeFromRepository(id);
-			log.info("If there's no exception, then recipe should be deleted from DB");
+			log.info("Requested recipe deleted from DB");
 			return ResponseEntity.status(HttpStatus.OK).body("Requested recipe deleted from DB");
 		}
 	}
