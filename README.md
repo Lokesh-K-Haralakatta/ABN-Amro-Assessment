@@ -25,6 +25,17 @@ Recipe Web Service is microservice based layered architectured RESTful Web Servi
 
 ### Webservice API Flow
 ![Recipe Webservice API Flow](https://github.com/Lokesh-K-Haralakatta/ABN-Amro-Assessment/blob/develop/recipw-web-service-flow.png)
+
+### Supported Features
+Feature | Software Module Used
+------------ | -------------
+ReSTful API | [Springboot](https://spring.io/projects/spring-boot)
+API Authentication | [Spring Security](https://spring.io/projects/spring-security) with JWT Token
+Object Relationship Mapping | [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
+Exception Handling | [Controller Advice and ExceptionHandler](https://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc)
+Logging | [SLF4J](http://www.slf4j.org/manual.html) Logger
+Unit Tests | Junit 5 with [AssertJ](https://assertj.github.io/doc/)
+
 ### Prerequisites
 * [JDK 1.8](https://www.oracle.com/in/java/technologies/javase/javase-jdk8-downloads.html)
 * [Apache Maven](https://maven.apache.org/)
