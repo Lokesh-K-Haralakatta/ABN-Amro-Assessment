@@ -65,13 +65,13 @@ Unit Tests | Junit 5 with [AssertJ](https://assertj.github.io/doc/)
     -  spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_name
     -  spring.datasource.username=mysql-username
     -  spring.datasource.password=mysql-user-password
-    -  spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+    -  spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
   - Web service needs database table with name `RECIPES` to be present in configured MySQL Database. Use below given table schema to create one before execution
     - CREATE TABLE recipes(id INT PRIMARY KEY, name VARCHAR(50), type VARCHAR(4),cdatetime TIMESTAMP, capacity INT, ingredients TEXT, instructions TEXT);  
   - Make sure MySQL Service is running on locallhost and listening at default port 3306
   - Command to execute with `mysql` profile: 
   ```
-  java -jar target/Recipes-Service-1.0.jar --spring.profiles.active=mysql --logging.level.root=INFO
+  java -jar target/Recipes-Service-1.0.jar --spring.config.location=src/main/resources/application-mysql.properties --logging.level.root=INFO
   ```
   - On successfull start, one should notice log message on console `Tomcat started on port(s): 9000 (http)` and have web service listening for web requests at port 9000
 * **Execution on Production Profile with MySQL Database**
@@ -82,7 +82,7 @@ Unit Tests | Junit 5 with [AssertJ](https://assertj.github.io/doc/)
     -  spring.datasource.url=jdbc:mysql://${MYSQL_HOST:hostName}:port-Number/db_name
     -  spring.datasource.username=mysql-username
     -  spring.datasource.password=mysql-user-password
-    -  spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+    -  spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
   - Web service needs database table with name `RECIPES` to be present in configured MySQL Database. Use below given table schema to create one before execution
     - CREATE TABLE recipes(id INT PRIMARY KEY, name VARCHAR(50), type VARCHAR(4),cdatetime TIMESTAMP, capacity INT, ingredients TEXT, instructions TEXT);    
   - Command to execute with custom application.properties file: 
