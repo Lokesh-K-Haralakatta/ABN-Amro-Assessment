@@ -45,14 +45,18 @@ Unit Tests | Junit 5 with [AssertJ](https://assertj.github.io/doc/)
 ### Steps to build Web Service
 * Download code zip / `git clone https://github.com/Lokesh-K-Haralakatta/ABN-Amro-Assessment`
 * Move to `ABN-Amro-Assessment` and run maven build command `mvn clean package`
-* On successfull build completion, one should have web service jar in `target` directory
+* To build by skipping unit tests run maven command `mvn clean package -DskipTests`
+* On successfull build completion, one should have web service jar in `target` directory named as `Recipes-Service-1.0.jar`
 
 ### Steps to execute Web Service
-* Execution on Development profile with Embedded H2 Database
+* **Execution on Development profile with Embedded H2 Database**
   - In Development Mode, by default web service uses [Embedded H2 database](https://spring.io/guides/gs/accessing-data-jpa/) for persisting and retrieving recipes details.
-  - Command to execute: `java --spring.profiles.active=dev -jar target/ABN-Amro-Recipes-Service-0.0.1-SNAPSHOT.jar`
-  - On successfull start, one should have web service listening for web requests at port 9000
-* Execution on Development profile with MySQL Database
+  - Command to execute: 
+   ```
+        java -jar target/Recipes-Service-1.0.jar --spring.profiles.active=dev --logging.level.root=INFO
+   ```
+  - On successfull start, one should notice log message on console `Tomcat started on port(s): 9000 (http)` and have web service listening for web requests at port 9000
+* **Execution on Development profile with MySQL Database**
   - In Development mode, one can also execute web service against local [MySQL Service](https://www.mysql.com/) for persisting and retrieving recipes details.
   - Specify required [MySQL Service](https://spring.io/guides/gs/accessing-data-mysql/) configuraiton parameters in `application.properties` file as given below:
     -  server.port=9000
@@ -64,9 +68,13 @@ Unit Tests | Junit 5 with [AssertJ](https://assertj.github.io/doc/)
     -  spring.datasource.driver-class-name=com.mysql.jdbc.Driver
   - Web service needs database table with name `RECIPES` to be present in configured MySQL Database. Use below given table schema to create one before execution
     - CREATE TABLE recipes(id INT PRIMARY KEY, name VARCHAR(50), type VARCHAR(4),cdatetime TIMESTAMP, capacity INT, ingredients TEXT, instructions TEXT);  
-  - Command to execute with custom application.properties file: `java --spring.config.location=application.properties -jar target/ABN-Amro-Recipes-Service-0.0.1-SNAPSHOT.jar`
-  - On successfull start, one should have web service listening for web requests at port 9000
-* Execution on Production Profile with MySQL Database
+  - Make sure MySQL Service is running on locallhost and listening at default port 3306
+  - Command to execute with `mysql` profile: 
+  ```
+  java -jar target/Recipes-Service-1.0.jar --spring.profiles.active=mysql --logging.level.root=INFO
+  ```
+  - On successfull start, one should notice log message on console `Tomcat started on port(s): 9000 (http)` and have web service listening for web requests at port 9000
+* **Execution on Production Profile with MySQL Database**
   - In order to execute on Production, set the required configuration parameters in application.properties file
     -  server.port=required-port-number
     -  spring.profiles.active=prod
@@ -77,11 +85,15 @@ Unit Tests | Junit 5 with [AssertJ](https://assertj.github.io/doc/)
     -  spring.datasource.driver-class-name=com.mysql.jdbc.Driver
   - Web service needs database table with name `RECIPES` to be present in configured MySQL Database. Use below given table schema to create one before execution
     - CREATE TABLE recipes(id INT PRIMARY KEY, name VARCHAR(50), type VARCHAR(4),cdatetime TIMESTAMP, capacity INT, ingredients TEXT, instructions TEXT);    
-  - Command to execute with custom application.properties file: `java --spring.config.location=application.properties -jar target/ABN-Amro-Recipes-Service-0.0.1-SNAPSHOT.jar`
+  - Command to execute with custom application.properties file: 
+  ```
+  java -jar target/Recipes-Service-1.0.jar --spring.config.location=application.properties
+  ```
   - On successfull start, one should have web service listening for web requests at specified port in `application.properties` file interacting with configured production grade MySQL Service for persistence and retrieval of recipes details.      
 
 ### Web Service ReST API End Points
 Recipe Webservice comes with ReST API Ends points for authentication, creating a new recipe, retrieveing an existing recipe, retrieving all existing recieps as list, updating an an existing recipe and deleting an existing recipe. Below table lists and describes on the implemented ReST APIs:
+**Note: With all given below api end points request, make sure to include header `Content-Type as application/json`**
 API End Point | Method | Purpose | Request | Response
 ------------ | ------------- | ------------- | ------------ | ------------- 
 /api/authenticate | POST | Authenticate and get JWT Token | User Model with user name and password | JWT Token on Success, 403 Forbidden on failure
@@ -147,16 +159,198 @@ In order to consume Recipe Webservice ReST API End points, one has to first auth
     ```
 - ReST API Calls and responses
   - POST request to `/api/authenticate` end point with above given user model :
-  - POST request to `/api/recipe` end point with above given recipe model and JWT Token as auth header returned in call to `/api/authenticate` :
-  - GET request to `/api/recipe/{id}` end point with path parameter as recipe id: `/api/recipe/101` end point :
+  ```
+  	{
+    		"userName": "abnamro",
+    		"password": "Bearer header.payload.signature"
+		}
+  ```
+  - POST request to `/api/recipe` end point with sample recipe model and JWT Token as auth header returned in call to `/api/authenticate` :
+  ```
+  	{
+    		"id": 102,
+    		"name": "White Forest Pastry",
+    		"type": "eg",
+    		"servingCapacity": 10,
+    		"ingredientsList": [
+        				{
+            					"name": "eggs",
+            					"quantity": "10 nos"
+        				},
+        				{
+            					"name": "floor",
+            					"quantity": "500 gms"
+        				},
+        				{
+            					"name": "vipping",
+            					"quantity": "250 gms"
+        				}
+    				],
+    		"creationDateTime": "2021-07-01T15:21:34.561+00:00",
+    		"instructions": "Step by Step procedure to prepare Butter Sponge Cake:\nStep-1:\nStep-2:\nStep-3:\nStep-4:\nStep-5:",
+    		"cdateTimeString": "01-07-2021 20:51:34"
+	}
+  ```
+  - GET request to `/api/recipe/{id}` end point with path parameter as recipe id: `/api/recipe/102` end point :
+  ```
+  	{
+    		"id": 102,
+    		"name": "White Forest Pastry",
+    		"type": "eg",
+    		"servingCapacity": 10,
+    		"ingredientsList": [
+        				{
+            					"name": "eggs",
+            					"quantity": "10 nos"
+        				},
+        				{
+            					"name": "floor",
+            					"quantity": "500 gms"
+        				},
+        				{
+            					"name": "vipping",
+            					"quantity": "250 gms"
+        				}
+    				],
+    		"creationDateTime": "2021-07-01T15:21:34.561+00:00",
+    		"instructions": "Step by Step procedure to prepare Butter Sponge Cake:\nStep-1:\nStep-2:\nStep-3:\nStep-4:\nStep-5:",
+    		"cdateTimeString": "01-07-2021 20:51:34"
+	}
+  ```
   - GET request to `/api/recipes` end point :
-  - PUT request to `/api/recipe` end point with updated model with name renamed to `Milk Bun` and servingCapacity to 6 :
-  - GET request to `/api/recipe/{id}` end point with path parameter as recipe id: `/api/recipe/101`, one should notice updated fields in previous request reflected :
+  ```
+  	[
+    		{
+        		"id": 101,
+        		"name": "Sweet Bun",
+        		"type": "vg",
+        		"servingCapacity": 5,
+        		"ingredientsList": [],
+        		"creationDateTime": "2021-07-01T15:19:27.809+00:00",
+        		"instructions": null,
+        		"cdateTimeString": "01-07-2021 20:49:27"
+    		},
+    		{
+        		"id": 102,
+        		"name": "White Forest Pastry",
+        		"type": "eg",
+        		"servingCapacity": 10,
+        		"ingredientsList": [
+            					{
+                					"name": "eggs",
+                					"quantity": "10 nos"
+            					},
+            					{
+                					"name": "floor",
+                					"quantity": "500 gms"
+            					},
+            					{
+                					"name": "vipping",
+                					"quantity": "250 gms"
+            					}
+        				],
+        		"creationDateTime": "2021-07-01T15:21:34.561+00:00",
+        		"instructions": "Step by Step procedure to prepare Butter Sponge Cake:\nStep-1:\nStep-2:\nStep-3:\nStep-4:\nStep-5:",
+        		"cdateTimeString": "01-07-2021 20:51:34"
+    		}
+	]
+  ```
+  - PUT request to `/api/recipe` end point with updated model with recide id 102 and name renamed to `Sponge Cake` and servingCapacity to 4 :
+  ```
+  		{
+    			"id": 102,
+    			"name": "Sponge Cake",
+    			"type": "eg",
+    			"servingCapacity": 4,
+    			"ingredientsList": [
+        					{
+            						"name": "eggs",
+            						"quantity": "10 nos"
+        					},
+        					{
+            						"name": "floor",
+            						"quantity": "500 gms"
+        					},
+        					{
+            						"name": "vipping",
+            						"quantity": "250 gms"
+        					}
+    					],
+    			"creationDateTime": "2021-06-30T15:10:59.642+00:00",
+    			"instructions": "Step by Step procedure to prepare Butter Sponge Cake:\nStep-1:\nStep-2:\nStep-3:\nStep-4:\nStep-5:",
+    			"cdateTimeString": "30-06-2021 20:40:59"
+		}
+  ```
+  - GET request to `/api/recipe/{id}` end point with path parameter as recipe id: `/api/recipe/102`, one should notice updated fields in previous request reflected, i.e. recipe name and serving capacity:
+  ```
+  		{
+    			"id": 102,
+    			"name": "Sponge Cake",
+    			"type": "eg",
+    			"servingCapacity": 4,
+    			"ingredientsList": [
+        					{
+            						"name": "eggs",
+            						"quantity": "10 nos"
+        					},
+        					{
+            						"name": "floor",
+            						"quantity": "500 gms"
+        					},
+        					{
+            						"name": "vipping",
+            						"quantity": "250 gms"
+        					}
+    					],
+    			"creationDateTime": "2021-06-30T15:10:59.642+00:00",
+    			"instructions": "Step by Step procedure to prepare Butter Sponge Cake:\nStep-1:\nStep-2:\nStep-3:\nStep-4:\nStep-5:",
+    			"cdateTimeString": "30-06-2021 20:40:59"
+		}
+  ```
   - DELETE request to `/api/recipe/{id}` end point with path parameter as recipe id: `/api/recipe/101`, one should notice response message and status code as 200 OK :
+  ```
+  		Requested recipe deleted from DB
+  ```
   - GET request to `/api/recipe/{id}` end point with path parameter as recipe id: `/api/recipe/101`, one should notice response message and status code as 401 Not Found :
+  ```
+  		{
+    			"status": 404,
+    			"message": "404 NOT_FOUND \"Requested recipe not found in DB\"",
+    			"dateTime": "2021-07-01T21:08:53.797"
+		}
+  ```
+  - GET request to `/api/recipes` end point should return only one recipe with id 102:
+  ```
+  	[
+    		{
+        		"id": 102,
+        		"name": "Sponge Cake",
+        		"type": "eg",
+        		"servingCapacity": 4,
+        		"ingredientsList": [
+            					{
+                					"name": "eggs",
+                					"quantity": "10 nos"
+            					},
+            					{
+                					"name": "floor",
+                					"quantity": "500 gms"
+            					},
+            					{
+                					"name": "vipping",
+                					"quantity": "250 gms"
+            					}
+        		],
+        		"creationDateTime": "2021-06-30T15:10:59.642+00:00",
+        		"instructions": "Step by Step procedure to prepare Butter Sponge Cake:\nStep-1:\nStep-2:\nStep-3:\nStep-4:\nStep-5:",
+        		"cdateTimeString": "30-06-2021 20:40:59"
+    		}
+	]
+  ```
   
 ### Future Enhancements
-- Integrate Web Service with Authorisation servers
+- Integrate Web Service with Authorisation server for authentication and authorisation
+- Design and Implementation of Multi Factor Authentication feature
 - Design and build simple,beautiful front end view
 - Integration between Backend API with Front End view
 - Data Normalization in Persistence layer if recipes data grows exponentially
