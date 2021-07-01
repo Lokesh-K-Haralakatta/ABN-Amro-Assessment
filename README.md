@@ -1,6 +1,27 @@
 # ABN-Amro-Assessment: Recipe Web Service
 Recipe Web Service is specifically designed and implemented as part of ABN Amro Technical Interview. Recipe Web Service contains ReST APIs in order to Create, Get, Update and Delete recipe from the database and render the requested details as JSON response to end user. The response from ReST APIs can be further integrated with front end view for better presentation.
 
+### System Design
+Recipe Web Service is microservice based layered architectured RESTful Web Service. This service can be deployed independently on premise / cloud and can also be containerized to execute as docker containers. There are 4 layers from top to bottom:
+- API Layer
+  - Top layer, which is main interface available for intgeration and interaction with front-end or end user to consume APIs
+  - Contains secured API end points implementation
+  - [Springboot-starter-security](https://spring.io/guides/gs/securing-web/) Module along with JWT is used to implement authentication for APIs 
+  - [Springboot-starter-web](https://spring.io/guides/gs/rest-service/) module used as a framework to implement ReSTful api end points  
+- Service Layer
+  - This layer sits in between API layer and Data access layer with some utility functionality
+  - Mainly responsible for interacting with Data Access Layer and transferring the recipes data as required by top and below layers
+  - It's just another module added to decouple business logic of recipes data transfer and mapping from/to API layer
+  - Further, service layer can be enhanced to support advanved features like Caching, Interacting with external Authorization Service etc
+- Data Access Layer
+  - Responsible to provide Object Relationship Mapping (ORM) between higher level recipe Java objects and persistence layer tables
+  - [Springboot-starter-data-JPA](https://spring.io/guides/gs/accessing-data-jpa/) module is used to implement mappings between objects and tables
+  - This layer contains recipe entity classes and JPA repositories which implement lower level functionality of storing/retrieving recipes data  
+- Persistence Layer
+  - Bottom most layer, responsible for physically storing the recipes data onto database table
+  - Just one physical table - `recipes` is used to store the recipes data for the service
+  - [MySQL]((https://www.mysql.com/) is configured to be used as database service
+  - For development and testing purposes, the Embedded H2 Database provided by Spring Boot framework is also utilized 
 ### Prerequisites
 * [JDK 1.8](https://www.oracle.com/in/java/technologies/javase/javase-jdk8-downloads.html)
 * [Apache Maven](https://maven.apache.org/)
